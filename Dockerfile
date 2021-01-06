@@ -1,4 +1,4 @@
-FROM ruby:latest
+FROM ruby:2
 
 # Enable jemalloc
 RUN apt-get update && apt-get install libjemalloc2 && rm -rf /var/lib/apt/lists/*
