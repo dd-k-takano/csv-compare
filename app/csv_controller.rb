@@ -3,7 +3,7 @@ class CsvController
   require 'fastest-csv'
 
   def initialize(input_file)
-    @client = ::Mysql2::Client.new(host: ENV['DB_HOST'], user: ENV['DB_USER'], password: ENV['DB_PASSWORD'])
+    @client = ::Mysql2::Client.new(host: ENV['DB_HOST'], username: ENV['DB_USER'], password: ENV['DB_PASSWORD'])
     @client.query('SET CHARSET utf8mb4')
     @input_file = input_file
   end

@@ -2,7 +2,7 @@ class Comparator
   require 'mysql2'
 
   def initialize(bq_tables, td_tables)
-    @client = ::Mysql2::Client.new(host: ENV['DB_HOST'], user: ENV['DB_USER'], password: ENV['DB_PASSWORD'])
+    @client = ::Mysql2::Client.new(host: ENV['DB_HOST'], username: ENV['DB_USER'], password: ENV['DB_PASSWORD'])
     @client.query('SET CHARSET utf8mb4')
     @bq_tables = bq_tables
     @td_tables = td_tables
