@@ -1,9 +1,27 @@
 version: '3'
 services:
+  db:
+    image: mysql:5.7
+    environment:
+      TZ: Asia/Tokyo
+      MYSQL_ROOT_PASSWORD: password
+    command: mysqld --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - default
   app:
     build: .
     environment:
       - TZ=Asia/Tokyo
-    command: bash -c 'ruby main.rb'
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASSWORD=password
     volumes:
       - .:/workspace
+      - ../data:/data
+    networks:
+      - default
+volumes:
+  mysql-data:
+    driver: local
