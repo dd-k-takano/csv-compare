@@ -70,6 +70,7 @@ DEPENDENCIES
   fastest-csv
   mysql2
   ruby-debug-ide
+  ruby-progressbar
   solargraph
 
 BUNDLED WITH

@@ -19,7 +19,8 @@ services:
       - DB_PASSWORD=password
     volumes:
       - .:/workspace
-      - ../data:/data
+      - ../csv-data/data:/data
+      - ../csv-data/targets:/list
     networks:
       - default
 volumes:

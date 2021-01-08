@@ -10,5 +10,6 @@ gem 'debase'
 gem 'ruby-debug-ide'
 gem 'solargraph'
 
-gem 'mysql2'
+gem 'ruby-progressbar'
 gem 'fastest-csv'
+gem 'mysql2'
