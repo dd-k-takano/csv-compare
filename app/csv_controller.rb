@@ -10,7 +10,7 @@ class CsvController
   end
 
   def import(db_name, table_name)
-    drop_create_table(db_name, table_name)
+    create_table(db_name, table_name)
     pb = ProgressBar.create(total: File.foreach(@input_file).inject(0) {|c, line| c+1}, progress_mark: '#', remainder_mark: '･')
     ::FastestCSV.foreach(@input_file) do |row|
       value = ''
@@ -26,9 +26,8 @@ class CsvController
 
   private
 
-  def drop_create_table(db_name, table_name)
+  def create_table(db_name, table_name)
     @client.query("CREATE DATABASE IF NOT EXISTS #{db_name}")
-    @client.query("DROP TABLE IF EXISTS #{db_name}.#{table_name}")
     @client.query("CREATE TABLE IF NOT EXISTS #{db_name}.#{table_name} (id BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY, row TEXT)")
   end
 
