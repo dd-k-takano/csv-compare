@@ -15,7 +15,7 @@ end
 glob('/data').each do |file_path|
   puts "--------------- #{file_path} ---------------"
   db = { db: file_path.split('/')[2], table: file_path.split('/')[3] }
-  CsvController.new(db[:db], file_path).import(db[:table])
+  CsvController.new(file_path).import(db[:db], db[:table])
 end
 
 targets = {}
