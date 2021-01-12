@@ -33,7 +33,9 @@ class CsvController
   end
 
   def convert(str)
-    if !(str =~ /\A[0-9]+\z/).nil?
+    if str.nil?
+      ''
+    elsif !(str =~ /\A[0-9]+\z/).nil?
       str.gsub("'", '').strip
     else
       DateTime.parse(str.gsub("'", '').strip).to_s
