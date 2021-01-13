@@ -18,17 +18,7 @@ glob('/data').each do |file_path|
   CsvController.new(file_path).import(db[:db], db[:table])
 end
 
-targets = {}
-glob('/list').each do |file_path|
-  key = file_path.split('/')[2].gsub(/\.csv$/i, '')
-  list = []
-  ::FastestCSV.foreach(file_path) do |row|
-    list.push(row)
-  end
-  targets[key] = list
-end
-
-targets[targets.keys[0]].each_with_index do |target, idx|
-  puts "--------------- #{idx} : #{target} ---------------"
-  Comparator.new(target, targets[targets.keys[1]][idx]).compare('diff', target[0].split('.')[1])
+glob('/targets').each do |file_path|
+  puts "--------------- #{file_path} ---------------"
+  Comparator.new(file_path).compare('compare')
 end
