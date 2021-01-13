@@ -14,7 +14,7 @@ class CsvController
     if 0 < cnt
       @client.query("CREATE DATABASE IF NOT EXISTS #{db_name}")
       @client.query("CREATE TABLE IF NOT EXISTS #{db_name}.#{table_name} (id BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY, #{columns(cnt)})")
-      @client.query("LOAD DATA LOCAL INFILE \"#{@input_file}\" INTO TABLE  #{db_name}.#{table_name} FIELDS TERMINATED BY ',' (#{fields(cnt)}) SET #{mapping(cnt)} ")
+      @client.query("LOAD DATA LOCAL INFILE \"#{@input_file}\" INTO TABLE  #{db_name}.#{table_name} FIELDS TERMINATED BY ',' ENCLOSED BY '\"' ESCAPED BY '\"' (#{fields(cnt)}) SET #{mapping(cnt)} ")
     end
   end
 
