@@ -7,7 +7,8 @@ services:
       MYSQL_ROOT_PASSWORD: password
     command: mysqld --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
-      - mysql-data:/var/lib/mysql
+      - ../csv-data/mysql:/var/lib/mysql
+      - ../csv-data/data:/data
     networks:
       - default
   app:
@@ -17,12 +18,10 @@ services:
       - DB_HOST=db
       - DB_USER=root
       - DB_PASSWORD=password
+    command: bash -c 'ruby main.rb'
     volumes:
       - .:/workspace
       - ../csv-data/data:/data
       - ../csv-data/targets:/list
     networks:
       - default
-volumes:
-  mysql-data:
-    driver: local

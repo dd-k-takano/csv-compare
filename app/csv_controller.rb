@@ -10,36 +10,42 @@ class CsvController
   end
 
   def import(db_name, table_name)
-    create_table(db_name, table_name)
-    pb = ProgressBar.create(total: File.foreach(@input_file).inject(0) {|c, line| c+1}, progress_mark: '#', remainder_mark: '･')
-    ::FastestCSV.foreach(@input_file) do |row|
-      value = ''
-      row.each do |str|
-        value << ',' unless value.empty?
-        value << convert(str)
-      end
-      @client.query("INSERT INTO #{db_name}.#{table_name} (row) values ('#{value}')")
-      pb.increment
-    end
-    pb.finish
-  end
-
-  private
-
-  def create_table(db_name, table_name)
+    cnt = _count
     @client.query("CREATE DATABASE IF NOT EXISTS #{db_name}")
-    @client.query("CREATE TABLE IF NOT EXISTS #{db_name}.#{table_name} (id BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY, row TEXT)")
+    @client.query("CREATE TABLE IF NOT EXISTS #{db_name}.#{table_name} (id BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY, #{columns(cnt)})")
+    @client.query("LOAD DATA LOCAL INFILE \"#{@input_file}\" INTO TABLE  #{db_name}.#{table_name} FIELDS TERMINATED BY ',' (#{fields(cnt)}) SET #{mapping(cnt)} ")
   end
 
-  def convert(str)
-    if str.nil?
-      ''
-    elsif !(str =~ /\A[0-9]+\z/).nil?
-      str.gsub("'", '').strip
-    else
-      DateTime.parse(str.gsub("'", '').strip).to_s
+  def _count
+    ::FastestCSV.foreach(@input_file) do |row|
+      return row.length
     end
-  rescue ArgumentError
-    str.gsub("'", '').strip
+  end
+
+  def columns(cnt)
+    value = ''
+    cnt.times do |idx|
+      value << ',' unless value.empty?
+      value << "col#{idx} TEXT"
+    end
+    value
+  end
+
+  def fields(cnt)
+    value = ''
+    cnt.times do |idx|
+      value << ',' unless value.empty?
+      value << "@#{idx}"
+    end
+    value
+  end
+
+  def mapping(cnt)
+    value = ''
+    cnt.times do |idx|
+      value << ',' unless value.empty?
+      value << "col#{idx}=@#{idx}"
+    end
+    value
   end
 end
