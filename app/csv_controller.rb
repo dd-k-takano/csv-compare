@@ -11,15 +11,18 @@ class CsvController
 
   def import(db_name, table_name)
     cnt = _count
-    @client.query("CREATE DATABASE IF NOT EXISTS #{db_name}")
-    @client.query("CREATE TABLE IF NOT EXISTS #{db_name}.#{table_name} (id BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY, #{columns(cnt)})")
-    @client.query("LOAD DATA LOCAL INFILE \"#{@input_file}\" INTO TABLE  #{db_name}.#{table_name} FIELDS TERMINATED BY ',' (#{fields(cnt)}) SET #{mapping(cnt)} ")
+    if 0 < cnt
+      @client.query("CREATE DATABASE IF NOT EXISTS #{db_name}")
+      @client.query("CREATE TABLE IF NOT EXISTS #{db_name}.#{table_name} (id BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY, #{columns(cnt)})")
+      @client.query("LOAD DATA LOCAL INFILE \"#{@input_file}\" INTO TABLE  #{db_name}.#{table_name} FIELDS TERMINATED BY ',' (#{fields(cnt)}) SET #{mapping(cnt)} ")
+    end
   end
 
   def _count
     ::FastestCSV.foreach(@input_file) do |row|
       return row.length
     end
+    return 0
   end
 
   def columns(cnt)
@@ -28,7 +31,7 @@ class CsvController
       value << ',' unless value.empty?
       value << "col#{idx} TEXT"
     end
-    value
+    return value
   end
 
   def fields(cnt)
@@ -37,7 +40,7 @@ class CsvController
       value << ',' unless value.empty?
       value << "@#{idx}"
     end
-    value
+    return value
   end
 
   def mapping(cnt)
@@ -46,6 +49,6 @@ class CsvController
       value << ',' unless value.empty?
       value << "col#{idx}=@#{idx}"
     end
-    value
+    return value
   end
 end
