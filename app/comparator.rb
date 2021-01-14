@@ -11,6 +11,6 @@ class Comparator
   def compare(db_name)
     @client.query("CREATE DATABASE IF NOT EXISTS #{db_name}")
     @client.query("USE #{db_name}")
-    @client.query("#{@input_file}")
+    @client.query("SOURCE #{@input_file}")
   end
 end
